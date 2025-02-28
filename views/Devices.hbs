@@ -1,0 +1,121 @@
+<link rel="stylesheet" type="text/css" href="/vendor/pintuer.css" />
+<h2 align="center">DEVICES & SENSORS</h2>
+<div class="container padding-big-top padding-big-bottom">
+    <div class="line-big">
+        <div class="line margin-big-bottom">
+            <form method="post" action="/find/device">
+                <div class="form-group">
+                    <div class="field">
+                        <div class="input-group">
+                            <span class="addbtn">
+                                <button type="button" class="button icon-search"></button>
+                            </span>
+                            <input type="search" class="input" name="search" size="50"
+                                placeholder="search by key word" />
+                            <span class="addbtn">
+                                <button type="submit" class="button">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="line">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="check_all">
+                        </th>
+                        <th>GPIO</th>
+                        <th>TYPE</th>
+                        <th>hardwareID</th>
+                        <th>DESCRIPTION</th>
+                        <th>OPERATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# each devices}}
+                    <tr class="height-big">
+                        <td>
+                            <input type="checkbox" class="check_item">
+                        </td>
+                        <td class="text-center">{{gpio}}</td>
+                        <td>{{type}}</td>
+                        <td>{{#if idno}} {{idno}} {{/if}}</td>
+                        <td>{{description}}</td>
+                        <td class="text-center">
+                            <a class="button bg-sub button-small" href="/edit/{{#if idno}}sensor/gpio={{gpio}}&idno={{idno}}/{{else}}device/{{gpio}}{{/if}}"><span
+                                    class="icon-edit"></span>
+                                Edit</a>
+                            <a class="button bg-dot button-small" href="/delete/{{#if idno}}sensor{{else}}device{{/if}}/{{gpio}}" id="deleteDevice"><span
+                                    class="icon-trash-o"></span> Delete</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    <tr class="height-large text-center">
+                        <td colspan="6">
+                            <a class="button bg-main button-small" href="/add/device"><span class="icon-plus"></span>
+                                Add Device</a>
+                            <a class="button bg-main button-small" href="/add/sensor"><span class="icon-plus"></span>
+                                Add Sensor</a>
+                            <a class="button bg-dot button-small" href="" id="deleteSelected"><span
+                                    class="icon-trash-o"></span>
+                                Delete Selected</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form id="delete_form" method="post">
+                <input type="hidden" name="_method" value="delete" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on("click", "#deleteDevice", function () {
+        var tip = "Are you sure you want to delete the current device data?";
+        if (confirm(tip)) {
+            var href = $(this).attr("href");
+            window.location.href = href
+        }
+        //阻止超链接的默认行为
+        return false;
+    });
+    //全选/全不选
+    $("#check_all").click(function () {
+        //attr方法获取checked是undefined
+        //attr方法用于获取自定义属性的值
+        //prop方法修改和读取dom原生属性的值
+        $(".check_item").prop("checked", $(this).prop("checked"));
+    });
+    $(document).on("click", ".check_item", function () {
+        //判断当前选中的元素个数是否为所有复选框个数
+        var flag = $(".check_item:checked").length == $(".check_item").length;
+        $("#check_all").prop("checked", flag);
+    });
+    $("#deleteSelected").click(function () {
+        if ($(".check_item:checked").length > 0) {
+            var devicesNames = "";
+            var del_ids = "";
+            $.each($(".check_item:checked"), function () {
+                devicesNames += $(this).parents("tr").find("td:eq(2)").text() + ",";
+                del_ids += $(this).parents("tr").find("td:eq(1)").text() + ",";
+            });
+            //去除末尾多余的逗号
+            devicesNames = devicesNames.substring(0, devicesNames.length - 1);
+            del_ids = del_ids.substring(0, del_ids.length - 1);
+            var tip = "Are you sure you want to delete [" + devicesNames + "] devices data?";
+            if (confirm(tip)) {
+                var href = "/" + del_ids;
+                $("#delete_form").attr("action", href).submit();
+            }
+        } else {
+            alert("Please select the data you want to delete!")
+        }
+        //阻止超链接的默认行为
+        return false;
+    });
+</script>
+<script src="/vendor/pintuer.js"></script>

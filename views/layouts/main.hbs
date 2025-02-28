@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="keywords" content="EQUIPMENTS">
+  <meta name="description" content="">
+  <title>Switches</title>
+  <link rel="stylesheet" href="/vendor/nicepage.css" media="screen">
+  <link rel="stylesheet" href="/vendor/Switches.css" media="screen">
+  <script class="u-script" type="text/javascript" src="/vendor/jquery-1.9.1.min.js" defer=""></script>
+  <script class="u-script" type="text/javascript" src="/vendor/nicepage.js" defer=""></script>
+  <meta name="generator" content="Nicepage 5.2.4, nicepage.com">
+  <link id="u-theme-google-font" rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+  <link rel="stylesheet" type="text/css" href="/vendor/devices-sensors-styles.css" />
+  <link rel="icon" type="image/png" href="/images/favicon.ico" />
+  <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "",
+		"url": "/",
+		"logo": "images/njad2.png"
+}</script>
+  <meta name="theme-color" content="#478ac9">
+  <meta property="og:title" content="Switches">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="/">
+
+
+  {{#if showTests}}
+  <link rel="stylesheet" href="/vendor/mocha.css">
+  {{/if}}
+  <script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+  <!-- Add alert library -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<!-- Add icon library -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+  <!-- include socket.io client side script -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  {{> Header }}
+
+  {{{body}}}
+
+  {{#if showTests}}
+  <div id="mocha"></div>
+  <script src="/vendor/mocha.js"></script>
+  <script src="/vendor/chai.js"></script>
+  <script>
+    mocha.ui('tdd');
+    var assert = chai.assert;
+  </script>
+
+  <script src="/qa/tests-global.js"></script>
+  {{#if pageTestScript}}
+  <script src="{{pageTestScript}}"></script>
+  {{/if}}
+  <script>mocha.run();</script>
+  {{/if}}
+
+
+  {{> Footer}}
+
+</body>
+
+</html>

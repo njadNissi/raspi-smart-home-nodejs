@@ -1,0 +1,37 @@
+{
+    "firstName": "fname",
+    "insert": {
+        "device": "INSERT INTO tbl_devices SET gpio = ?, type = ?, description = ?",
+        "sensor": "INSERT INTO tbl_sensors SET gpio = ?, idno = ?, type = ?, description = ?",
+        "oneSchedule": "INSERT INTO tbl_schedules SET device_gpio = ?, start_time = ?, cron_time = ?, state = ?",
+        "oneSensorDevice": "INSERT INTO tbl_sens_dev_auto SET sensor_gpio=?, sensor_idno=?, device_gpio=?, sensor_value=?, device_state=?"
+    },
+    "delete": {
+        "oneDevice": "DELETE FROM tbl_devices WHERE gpio = ?",
+        "devices": "",
+        "oneSensor": "DELETE FROM tbl_sensors WHERE gpio = ? or idno = ?",
+        "oneSchedule": "DELETE FROM tbl_schedules WHERE id = ?",
+        "oneSensorDevice": "DELETE FROM tbl_sens_dev_auto WHERE id = ?"
+    },
+    "select": {
+        "oneDevice": "SELECT * FROM tbl_devices WHERE gpio = ?",
+        "devicesByType": "SELECT * FROM tbl_devices where type = ?",
+        "byDeviceKey": "SELECT * FROM tbl_devices WHERE description LIKE ? OR type LIKE ?",
+        "allDevices": "SELECT * FROM tbl_devices",
+        "oneSensor": "SELECT * FROM tbl_sensors WHERE gpio = ? and idno = ?",
+        "sensorsByType": "SELECT * FROM tbl_sensors WHERE type LIKE ?",
+        "allSensors": "SELECT * FROM tbl_sensors",
+        "schedulesByDescOrTime": "SELECT *, tbl_schedules.id, tbl_schedules.state, tbl_devices.description from tbl_schedules inner join tbl_devices on tbl_devices.gpio = tbl_schedules.device_gpio where tbl_schedules.description like ? or tbl_schedules.start_time like ?",
+        "oneSchedule": "SELECT *, tbl_schedules.id, tbl_schedules.state, tbl_devices.description from tbl_schedules inner join tbl_devices on tbl_devices.gpio = tbl_schedules.device_gpio where tbl_schedules.device_gpio = ? ORDER BY tbl_schedules.id DESC",
+        "allSchedules": "SELECT *, tbl_schedules.id, tbl_schedules.state, tbl_devices.description from tbl_schedules inner join tbl_devices on tbl_devices.gpio = tbl_schedules.device_gpio ORDER BY tbl_schedules.id DESC",
+        "oneSensorDevice": "SELECT *, tbl_schedules.id, tbl_schedules.state, tbl_devices.description from tbl_schedules inner join tbl_devices on tbl_devices.gpio = tbl_schedules.device_gpio where tbl_schedules.device_gpio = ? ORDER BY tbl_schedules.id DESC",
+        "allSensorsDevices": "SELECT * FROM tbl_sens_dev_auto",
+        "allSensorsDevicesOld": "SELECT *, tbl_devices.description as devicedesc, tbl_sensors.description as sensordesc from tbl_sens_dev_auto join tbl_devices on tbl_devices.gpio = tbl_sens_dev_auto.device_gpio join tbl_sensors on tbl_sensors.gpio = tbl_sens_dev_auto.sensor_gpio;"
+    },
+    "update": {
+        "oneDevice": "UPDATE tbl_devices SET description = ?, gpio = ?, type = ? WHERE gpio = ?",
+        "deviceState": "UPDATE tbl_devices SET state = ? WHERE gpio = ?",
+        "oneSensor": "UPDATE tbl_sensors SET description = ?, gpio = ?, value=?, type = ? WHERE idno = ?",
+        "oneSchedule": "oneSchedule"
+    }
+}

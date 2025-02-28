@@ -1,0 +1,63 @@
+<link rel="stylesheet" type="text/css" href="/vendor/pintuer.css" />
+<div class="container padding-big-top padding-big-bottom">
+
+    <h2 align="center">CONNECTED USERS</h2>
+
+    <div class="line-big">
+        <div class="line margin-big-bottom">
+            <form method="post" action="/find/device">
+                <div class="form-group">
+                    <div class="field">
+                        <div class="input-group">
+                            <span class="addbtn">
+                                <button type="button" class="button icon-search"></button>
+                            </span>
+                            <input type="search" class="input" name="search" size="50"
+                                placeholder="search by key word" />
+                            <span class="addbtn">
+                                <button type="submit" class="button">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="line">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>IP ADDRESS</th>
+                        <th>DEVICE TYPE</th>
+                        <th>COONECTION DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# each users}}
+                    <tr class="height-big">
+                        <td class="text-center">{{ip}}</td>
+                        <td>{{type}}</td>
+                        <td>{{date}}</td>
+                    </tr>
+                    {{/each}}
+
+                    <tr>
+                        <td colspan="4">
+                            <center>
+                                <button><a class="button bg-dot" href="/security/user-logout"><span
+                                            class="fa fa-window-close">LogOut</span></a></button>
+                            </center>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //enable this user's diconnect button
+    //$.getJSON("https://api.ipify.org?format=json", (data) => {
+    //    $("#disconnectBtn" + data.ip).prop(disabled, false)
+    //})
+</script>
+<script src="/vendor/pintuer.js"></script>

@@ -1,0 +1,241 @@
+<link rel="stylesheet" type="text/css" href="/vendor/pintuer.css" />
+<link rel="stylesheet" type="text/css" href="/vendor/tab.css" />
+
+<div class="tab">
+    <strong align="center">TELL US WHAT TO DO FOR YOU LATER</strong>
+    <button class="tablinks" onclick="openTab(event, 'time_based_schedules')" id="btn_time_based_schedules">Time
+        schedules</button>
+    <button class="tablinks" onclick="openTab(event, 'sensor_based_schedules')" id="btn_sensor_based_schedules">Sensor
+        Schedules</button>
+</div>
+
+{{!-- TIME BASED SCHEDULES --}}
+<div class="container padding-big-top padding-big-bottom tabcontent" id="time_based_schedules">
+    <h2 align="center">TIME BASED SCHEDULES</h2>
+    <div class="line-big">
+        <div class="line margin-big-bottom">
+            <form method="post" action="/find/schedule">
+                <div class="form-group">
+                    <div class="field">
+                        <div class="input-group">
+                            <span class="addbtn">
+                                <button type="button" class="button icon-search"></button>
+                            </span>
+                            <input type="search" class="input" name="search" size="50"
+                                placeholder="search by key word" />
+                            <span class="addbtn">
+                                <button type="submit" class="button">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="line">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="check_all">
+                        </th>
+                        <th>GPIO</th>
+                        <th>DESCRIPTION</th>
+                        <th>START TIME</th>
+                        <th>ACTIVITY</th>
+                        <th>OPERATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# each time_schedules}}
+                    <tr class="height-big text-center">
+                        <input type="hidden" id="t_state_{{id}}" value="{{state}}">
+                        <td>
+                            <input type="checkbox" class="check_item">
+                        </td>
+                        <td>{{device_gpio}}</td>
+                        <td>{{description}}</td>
+                        <td>{{start_time}}</td>
+                        <td><button class="onoff" id="btn_state_{{id}}"
+                                onclick="onoff('t_state_{{id}}', 't_lamp_{{id}}')">
+                                <div id='t_lamp_{{id}}'>{{state}}</div>
+                            </button></td>
+                        <td class="text-center">
+                            {{!-- <a class="button bg-sub button-small" href=""><span class="icon-save"></span>
+                                Save Changes</a> --}}
+                            <a class="button bg-dot button-small" href="/delete/schedule?t=t&id={{id}}"
+                                id="deleteSchedule"><span class="icon-trash-o"></span> Delete</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    <tr class="height-large text-center">
+                        <td colspan="6">
+                            <a class="button bg-dot button-small" href="" id="deleteSelected"><span
+                                    class="icon-trash-o"></span>
+                                Delete Selected</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form id="delete_form" method="post">
+                <input type="hidden" name="_method" value="delete" />
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- SENSOR BASED SCHEDULES --}}
+<div class="container padding-big-top padding-big-bottom tabcontent" id="sensor_based_schedules">
+    <h2 align="center">SENSOR BASED SCHEDULES</h2>
+    <div class="line-big">
+        <div class="line margin-big-bottom">
+            <form method="post" action="/find/schedule">
+                <div class="form-group">
+                    <div class="field">
+                        <div class="input-group">
+                            <span class="addbtn">
+                                <button type="button" class="button icon-search"></button>
+                            </span>
+                            <input type="search" class="input" name="search" size="50"
+                                placeholder="search by key word" />
+                            <span class="addbtn">
+                                <button type="submit" class="button">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="line">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="check_all">
+                        </th>
+                        <th>SENSOR</th>
+                        <th>TRIGGER VALUE</th>
+                        <th>DEVICE</th>
+                        <th>ACTIVITY</th>
+                        <th>OPERATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each sensor_schedules}}
+                    <tr class="height-big text-center">
+                        {{!-- <input type="hidden" id="s_trigger_{{id}}" value="{{sensor_value}}"> --}}
+                        {{!-- <input type="hidden" id="s_state_{{id}}" value="{{sensor_value}}"> --}}
+                        <td>
+                            <input type="checkbox" class="check_item">
+                        </td>
+                        <td>{{sensordesc}}</td>
+                        <td>
+                            <button class="onoff" id="btn_trigger_{{id}}"
+                                onclick="onoff('s_trigger_{{id}}', 's_lamp1_{{id}}')">
+                                <div id='s_lamp0_{{id}}'>{{sensor_value}}</div>
+                            </button>
+                        </td>
+                        <td>{{devicedesc}}</td>
+                        <td>
+                            <button class="onoff" id="btn_state_{{id}}"
+                                onclick="onoff('s_state_{{id}}', 's_lamp2_{{id}}')">
+                                <div id='s_lamp2_{{id}}'>{{device_state}}</div>
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            {{!-- <a class="button bg-sub button-small" id="postEditSensorSchedule"><span
+                                    class="icon-save"></span>
+                                Save Changes</a> --}}
+                            {{!-- <button type="submit" class="button bg-sub button-small"
+                                id="postEditSensorSchedule">Save</button> --}}
+                            <a class="button bg-dot button-small" href="/delete/schedule?s=s&id={{id}}"
+                                id="deleteSchedule"><span class="icon-trash-o"></span> Delete</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+
+                    {{!-- new schedule --}}
+                    {{#if new_schedule}}
+                    <tr class="height-big text-center">
+                        <form name="form">
+                            <input type="hidden" name="url" id="url" value="/add/s-schedule/">
+                            <td>
+                                <input type="checkbox" class="check_item">
+                            </td>
+                            <td>
+                                <select name="sensor" id="sensor">
+                                    {{#each sensors}}
+                                    {{#strCmp gpio ../sensor_gpio }}
+                                    <option value="{{gpio}}_{{idno}}" selected>{{description}}</option>
+                                    {{else }}
+                                    <option value="{{gpio}}_{{idno}}">{{description}}</option>
+                                    {{/strCmp}}
+                                    {{/each}}
+                                </select>
+                            </td>
+                            <td>
+                                {{#strCmp caller "t"}}
+                                <input type="number" id="sensor_value" placeholder="analog value">
+                                {{else}}
+                                <div class="onoff" id="btn_trigger">
+                                 <select id="sensor_value" name="sensor_value">
+                                        <option value="1"><div>ON DECTECTION</div></option>
+                                 <option value="0"><div></div>NO DETECTION</option>
+                                 </select>
+                                </div>
+                                {{/strCmp}}
+                            </td>
+                            <td>
+                                <select name="device" id="device">
+                                    {{#each devices}}
+                                    {{#strCmp gpio ../device_gpio }}
+                                    <option value="{{gpio}}" selected>{{description}}</option>
+                                    {{else }}
+                                    <option value="{{gpio}}">{{description}}</option>
+                                    {{/strCmp }}
+                                    {{/each}}
+                                    
+                                </select>
+                            <td>
+                                {{!-- <button class="onoff" id="btn_state"
+                                    onclick="window.location.href='https://www.bing.com';">
+                                    <a id='s_lamp1' href='/add/s-schedule/toggle?type=ds&v={{ds}}'></a>
+                                </button> --}}
+                                <div class="onoff" id="btn_trigger">
+                                 <select id="device_state" name="device_state">
+                                        <option value="1"><div>TURN ON</div></option>
+                                 <option value="0"><div></div>TURN OFF</option>
+                                 </select>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                {{!-- <a class="button bg-sub button-small" id="postEditSensorSchedule"><span
+                                        class="icon-save"></span>
+                                    Save Changes</a> --}}
+                                {{!-- <span class="icon-save"></span> --}}
+                                <button type="submit" class="bg-sub button button-small icon-save"
+                                    id="postEditSensorSchedule">Save</button>
+                                <a class="button bg-dot button-small" href="/delete/schedule?t=s&id={{id}}"
+                                    id="deleteSchedule"><span class="icon-trash-o"></span>Delete</a>
+                            </td>
+                        </form>
+                    </tr>
+                    {{/if}}
+                    {{!-- <tr class="height-large text-center">
+                        <td colspan="6">
+                            <a class="button bg-dot button-small" href="" id="deleteSelected"><span
+                                    class="icon-trash-o"></span>
+                                Delete Selected</a>
+                        </td>
+                    </tr> --}}
+                </tbody>
+            </table>
+            <form id="delete_form" method="post">
+                <input type="hidden" name="_method" value="delete" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/vendor/pintuer.js"></script>
+<script src="/vendor/tab.js"></script>
+<script src="/vendor/post_sensor_schedule.js"></script>

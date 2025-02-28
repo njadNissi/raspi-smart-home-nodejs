@@ -1,0 +1,55 @@
+<h2 align="center">EDIT DEVICE : {{description}}</h2>
+
+<section class="u-clearfix u-section-1" id="sec-8c6c">
+  <div class="u-clearfix u-sheet u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
+    <img class="u-image u-image-1 hidden-devices-img"
+      src="/images/g7aeda21b13dc7a8caf17bea96159bffaeede98fcbb5f748ed74d0c57296ef78f75fe66d1cd52faaeb237d6034c8e8f7392d3ee6eacc420bce5c4507091dc2834_1280.png"
+      data-image-width="1280" data-image-height="1105">
+    <div class="u-container-style u-group u-white u-group-1">
+      <div class="u-container-layout u-container-layout-1">
+
+        {{#if alert}}<p style="color: red;">{{alert}}</p>{{/if}}
+
+        <div class="u-form u-form-1">
+          <form class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" style="padding: 0px;" name="form">
+            <input hidden id="type" value="{{type}}">
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">Description</label>
+              <input type="text" id="description" value="{{description}}" name="description"
+                class="u-grey-5 u-input u-input-rectangle u-input-1" required="required">
+            </div>
+            <div class="u-form-group u-form-number u-form-number-layout-number u-label-left u-form-group-2">
+              <label for="number-f4a0" class="u-label u-spacing-1 u-label-2">GPIO NUMBER</label>
+              <p style="color: red;">Make sure you don't choose a reserved Gpio number, otherwise It
+                can lead the whole system to malfunction!</p>
+              <div class="u-input-row">
+                <input value="{{gpio}}" min="2" max="27" step="1" type="number" placeholder="" id="gpio" name="gpio"
+                  class="u-input u-input-rectangle u-number u-input-2" style="font-size: 30px;">
+              </div>
+            </div>
+            {{> DeviceTypes }}
+            <div class="u-form-group u-form-submit">
+              <input type="hidden" id="url" name="url" value="/edit/device/{{gpio}}">
+              <div class="u-align-center">
+                <button type="submit">SAVE</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let currentType = document.getElementById('type').value
+  let typeOptions = document.getElementsByName('type')
+  for (let i = 0; i < typeOptions.length; i++) {
+    if (typeOptions[i].value == currentType) {
+      typeOptions[i].checked = true
+      break
+    }
+  }
+</script>
+<link rel="stylesheet" href="/vendor/deviceForm.css" media="screen">
+<script src="/vendor/post-form.js"></script>

@@ -1,0 +1,301 @@
+<div style="float:right;"><strong>Settings</strong><a class="button bg-sub button-small"
+    onclick="showViewSettings()"><span class="fa fa-gear"></span></a></div>
+<div class="keypadContainer">
+  <div id="viewSettingsDiv">
+
+    <table style="word-wrap: break-word;">
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <td><strong>Devices/Sensors Icons Size</strong></td>
+              <td>
+                <input type="radio" name="view-mode" id="max" onclick="onViewMode('max')"><label
+                  class="view-choice">Max</label>
+              </td>
+              <td>
+                <input type="radio" name="view-mode" id="min" onclick="onViewMode('min')"><label
+                  class="view-choice">Min</label>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Sensors update interval</strong></td>
+              <td><input id="updateSensorPeriod" type="number" value="{{ update_period }}"></td>
+              <td><select name="updateSensorUnit" id="updateSensorUnit" value="{{ update_unit }}">
+                  <option value="S">Seconds</option>
+                  <option value="M">Minutes</option>
+                  <option value="H">Hours</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td colspan="3"><button id="btnUpdateInterval" onclick="setUpdatePeriod()">Apply</button></td>
+              <td></td>
+            </tr>
+      </tr>
+    </table>
+    </td>
+    <td>
+      <table>
+        <thead>
+          <th>Target</th>
+          <th>Background</th>
+          <th>ForeGround</th>
+          <th>Apply</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Device</td>
+            <td><input id='bg1' type="color" value="#ffffff" /></td>
+            <td><input id='fg1' type="color" value="#ffffff" /></td>
+            <td><button onclick="applyColors(1)">Apply</button></td>
+          </tr>
+          <tr>
+            <td>Sensor</td>
+            <td><input id='bg2' type="color" value="#ffffff" /></td>
+            <td><input id='fg2' type="color" value="#ffffff" /></td>
+            <td><button onclick="applyColors(2)">Apply</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+    </tr>
+    </table>
+
+    <style>
+      .view-choice {
+        text-size-adjust: 20px;
+        text-align: right;
+      }
+
+      th {
+        color: yellow;
+        border: 1px solid rgb(182, 12, 12);
+        background-color: #1b0347;
+      }
+
+      tr:nth-child(even) {
+        background-color: #D6EEEE;
+      }
+    </style>
+  </div>
+
+  {{#if alert}}
+  <script>
+    Swal.fire(
+      'NJAD SMART HOME',
+      {{ alert }},
+      'success'
+    )
+  </script>
+  {{/if}}
+
+  <section class="u-align-center u-clearfix u-gradient u-section-1" id="sec-86ef">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <div class="u-expanded-width u-list u-list-1">
+
+        {{!-- D E V I C E S P A N E L --}}
+        <div class="noselect">
+          <div id="keypadContainer1" class="keypadContainer">
+            {{#each devices}}
+            <input type="hidden" id="type{{gpio}}" value="{{type}}">
+            <div class="GpioContainer">
+              <img src="/images/{{img}}" id="img-{{gpio}}" alt="" class="" data-image-width="100"
+                data-image-height="100" alt="Device Icon">
+              <br><strong>{{ description}}</strong><br>
+              <div id="btns-{{gpio}}">
+                <table>
+                  <tr id="simple{{gpio}}">
+                    <td><label class="switch">
+                        <input type="checkbox" name="state" id="GPIO{{gpio}}" disabled>
+                        <span class="slider round"></span>
+                      </label></td>
+                    <td><button id="GPIO{{gpio}}M"></button></td>
+                  </tr>
+                  <tr id="PWM{{gpio}}">
+                    <input type="hidden" id="pwm{{gpio}}" value="">
+                    <td><label class="switch">
+                        <input type="checkbox" name="state" id="GPIO{{gpio}}Min" disabled>
+                        <span class="slider round"></span>
+                      </label></td>
+                    <td><label class="switch">
+                        <input type="checkbox" name="state" id="GPIO{{gpio}}Mid" disabled>
+                        <span class="slider round"></span>
+                      </label></td>
+                    <td><label class="switch">
+                        <input type="checkbox" name="state" id="GPIO{{gpio}}" disabled>
+                        <span class="slider round"></span>
+                      </label></td>
+                  </tr>
+                  <tr colspan="2">
+                    <td>
+                      <a class="button bg-sub button-small" href="/add/t-schedule/{{gpio}}"><span
+                          class="fa fa-clock-o"></span></a>
+                    </td>
+                    <td>
+                      <a class="button bg-sub button-small" href="/add/s-schedule?caller=d&gpio={{gpio}}"><span
+                          class="fa fa-gear"></span></a>
+                    </td>
+                    <td>
+                      {{!-- fa-info-circle --}}
+                      <a class="button bg-sub button-small" href="/schedule/device/{{gpio}}"><span
+                          class="fa fa-tasks"></span></a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{!-- S E N S O R S P A N E L --}}
+      <div class="u-expanded-width u-list u-list-1">
+        <div class="noselect">
+          <div id="keypadContainer2" class="keypadContainer">
+            {{#each sensors}}
+            <input type="hidden" id="type{{gpio}}" value="{{type}}">
+            <div class="GpioContainer">
+              <br><strong>{{ description }}</strong><br>
+              <table>
+                <td><label id="{{gpio}}_{{idno}}" style="font-size: 20px;"
+                    class="u-grey-5 u-input u-input-rectangle u-input-1">READING</label></td>
+                <td><a class="button bg-sub button-small" href="/schedule/sensor/{{type}}_{{gpio}}"><span
+                      class="fa fa-refresh"></span></a></td>
+                <td>
+                  {{#strCmp type "sns-temp-ds18b20"}}
+                  <a class="button bg-sub button-small" href="/add/s-schedule?caller=t&gpio={{gpio}}&idno={{idno}}"><span
+                      class="fa fa-gear"></span></a>
+                  {{else}}
+                  <a class="button bg-sub button-small" href="/add/s-schedule?caller=s&gpio={{gpio}}&idno={{idno}}"><span
+                      class="fa fa-gear"></span></a>
+                  {{/strCmp}}
+                </td>
+              </table>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {{!-- Show command buttons--}}
+  <script>
+    const pwmPins = [12, 13, 18, 19]
+    for (let i = 2; i <= 27; i++) {
+      let pwmCmdBtns = $('#PWM' + i)
+      let simpleCmdBtns = $('#simple' + i)
+      if (pwmPins.includes(i)) {
+        //pwmCmdBtns.style.display = "block"
+        if (simpleCmdBtns) { simpleCmdBtns.remove() }
+      } else if (pwmCmdBtns) {
+        //simpleCmdBtns.style.display = "block"
+        pwmCmdBtns.remove()
+      }
+    }
+  </script>
+
+  {{!-- Show and hide view settings --}}
+  <script>
+    const settingsDiv = document.getElementById("viewSettingsDiv")
+    function showViewSettings() {
+      settingsDiv.style.display = (settingsDiv.style.display == 'none') ? 'block' : 'none'
+    }
+    showViewSettings()
+  </script>
+
+  {{!-- view mode --}}
+  <script>
+    function onViewMode(selectedView) {
+
+      localStorage.setItem("selectedView", selectedView);
+
+      if (selectedView == 'max') {
+        //alert('You are switching to Maximized View')
+        for (let gpio = 2; gpio <= 27; gpio++) {
+          let imgEl = document.getElementById('img-' + gpio)
+          if (imgEl) {
+            imgEl.className = "u-image-contain "
+          }
+        }
+      } else {
+        //alert('You are switching to Minimized View')
+        for (let gpio = 2; gpio <= 27; gpio++) {
+          let imgEl = document.getElementById('img-' + gpio)
+          if (imgEl) {
+            imgEl.className = "u-image-contain u-image-1"
+          }
+        }
+      }
+    }
+
+    //keep chosen view
+    let selectedView = localStorage.getItem("selectedView")
+    if (selectedView == null) {
+      selectedView = 'min'
+    }
+    onViewMode(selectedView)
+    document.getElementById(selectedView).checked = true
+  </script>
+
+  {{!-- PANELS COLOR --}}
+  <script>
+    function applyColors(id) {
+      let bg = document.getElementById('bg' + id)
+      let fg = document.getElementById('fg' + id)
+      let keypadContainer = document.getElementById('keypadContainer' + id)
+      let selectedBgColor = bg.value
+      let selectedFgColor = fg.value
+      if (selectedBgColor && selectedFgColor) {
+        keypadContainer.style.backgroundColor = selectedBgColor
+        keypadContainer.style.color = selectedFgColor
+        localStorage.setItem("selectedBgColor" + id, selectedBgColor)
+        localStorage.setItem("selectedFgColor" + id, selectedFgColor)
+      }
+    }
+
+    //keep the selected color
+    for (let id = 1; id <= 2; id++) {
+      //read previously chosen colors
+      let selectedBgColor = localStorage.getItem("selectedBgColor" + id)
+      let selectedFgColor = localStorage.getItem("selectedFgColor" + id)
+      //get elements
+      let keypadContainer = document.getElementById('keypadContainer' + id)
+      let bg = document.getElementById('bg' + id)
+      let fg = document.getElementById('fg' + id)
+      //set to default if no previous, otherwise set to previous
+      if (selectedBgColor == null) {
+        keypadContainer.style.backgroundColor = "#ffffff"
+      } else if (selectedFgColor == null) {
+        keypadContainer.style.color = "#000000"
+      } else {
+        keypadContainer.style.backgroundColor = selectedBgColor
+        keypadContainer.style.color = selectedFgColor
+        bg.value = selectedBgColor
+        fg.value = selectedFgColor
+      }
+    }
+  </script>
+
+  {{!-- ICONS SETTINGS --}}
+  <style>
+    h1 {
+      color: green;
+    }
+
+    .btn {
+      background-color: light-green;
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: green;
+    }
+  </style>
+  <script src="/client.js"></script>

@@ -1,0 +1,44 @@
+ {{#if alert}}
+  <script>
+    Swal.fire(
+      'NJAD SMART HOME',
+      {{ alert }},
+      'success'
+    )
+  </script>
+  {{/if}}
+
+<style>
+  input {
+    /*background-color: #5eff0046;*/
+    /*font-size: 25px;*/
+    font-weight: bold;
+    text-align: right;
+    font-style: italic;
+  }
+</style>
+
+<center>
+  <div style="margin-left: 10%;"><strong>LOGIN</strong>
+    <form name="form">
+      <table>
+        <tr>
+          <td><label for="username"><i class="fa fa-user"></i></label>
+            <input type="text" name="ssid" id="ssid" placeholder="ENTER SSID" required>
+          </td>
+        </tr>
+        <tr><td><label for="password"><i class="fa fa-lock"></i></label>
+            <input type="password" name="pwd" id="pwd" placeholder="ENTER PASSWORD" required><label
+              for="password"></label>
+          </td></tr>
+        <tr><td><center><label for="vercode"><i class="fa fa-qrcode"></i></label><canvas id="ctx" width="100" height="30" style="border:0px solid #000000;"></canvas></center></td></tr>
+        <tr><td><label for="user-vercode"><i class="fa fa-code"></i></label><input type="text" id="verCode" placeholder="VERIFICATION CODE" required></td></tr>
+        <tr><td><center><button type="submit">Login</button></center></td></tr>
+      </table>
+    </form>
+  </div>
+</center>
+
+
+<link rel="stylesheet" href="/vendor/login-form.css" media="screen">
+<script src="/vendor/login.js"></script>

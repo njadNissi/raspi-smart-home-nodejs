@@ -1,0 +1,152 @@
+<h2 align="center">CREATE NEW SCHEDULE FOR {{description}}</h2>
+
+<section class="u-clearfix u-section-1" id="sec-8c6c">
+
+  <div class="u-clearfix u-sheet u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
+    <img class="u-image u-image-1 hidden-devices-img"
+      src="/images/g7aeda21b13dc7a8caf17bea96159bffaeede98fcbb5f748ed74d0c57296ef78f75fe66d1cd52faaeb237d6034c8e8f7392d3ee6eacc420bce5c4507091dc2834_1280.png"
+      data-image-width="1280" data-image-height="1105">
+  
+    
+
+    <div class="u-container-style u-group u-white u-group-1">
+      <div class="u-container-layout u-container-layout-1">
+
+        {{#if alert}}<br><br>
+        <p style="color: red;">{{alert}}</p>{{/if}}
+
+        <div class="u-form u-form-1">
+          <form class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" style="padding: 0px;" name="form">
+            <input hidden id="type" value="{{type}}">
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">Description</label>
+              <input type="text" id="description" name="description"
+                class="u-grey-5 u-input u-input-rectangle u-input-1" style="font-size: 30px; text-align:center;"
+                value="{{description}}" readonly>
+            </div>
+            <div class="u-form-group u-form-number u-form-number-layout-number u-label-left u-form-group-2">
+              <label for="number-f4a0" class="u-label u-spacing-1 u-label-2">GPIO NUMBER</label>
+              <input id="gpio" name="gpio" class="u-grey-5 u-input u-input-rectangle u-input-1"
+                style="font-size: 30px; text-align:center;" value="{{gpio}}" readonly>
+            </div>
+            {{!-- TIME ON WHICH EVENT WILL START --}}
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">START TIME</label>
+              <input type="time" id="startTime" name="startTime" style="font-size: 20px;" required>
+            </div>
+            {{!-- TIME ON WHICH EVENT WILL STOP --}}
+            <p style="color: red; margin-left:20px">THERE ARE TWO METHODS TO STOP THE ACTIVITY IF NEEDED.<br>
+              (I) SET STOP TIME ; (II) SET ACTIVITY DURATION</p>
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">STOP TIME</label>
+              <input type="time" id="stopTime" name="stopTime" style="font-size: 20px;" required>
+              <input type="checkbox" name="stopBox" id="stopBox" onclick="enableStopTime()">
+            </div>
+            {{!-- AFTER HOW LONG TO STOP THE ACTIVITY FOR EACH CHOSEN DAY --}}
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">DURATION</label>
+              <input value="0" min="0" max="23" step="1" type="number" name="hours" id="hours"
+                class="u-number u-input-2">HOURS
+              <input value="0" min="0" max="59" step="1" type="number" name="minutes" id="minutes"
+                class=" u-number u-input-2">MINUTES
+              <input type="checkbox" name="durationBox" id="durationBox" onclick="enableDuration()">
+            </div>
+            <div class="u-form-group u-label-left">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">RATE</label>
+              <input type="checkbox" name="repeatBox" id="repeatBox" onclick="showDays()">
+              {{!-- CHOSEN DAYS ON WHICH THE EVENT WILL HAPPEN --}}
+              <div id="repeatDiv" style="font-size: 20px; text-align:left;">
+                <input type="checkbox" name="days" value="Sun">SUNDAY<br>
+                <input type="checkbox" name="days" value="Mon">MONDAY<br>
+                <input type="checkbox" name="days" value="Tue">TUESDAY<br>
+                <input type="checkbox" name="days" value="Wed">WEDNESDAY<br>
+                <input type="checkbox" name="days" value="Thu">THURSDAY<br>
+                <input type="checkbox" name="days" value="Fri">FRIDAY<br>
+                <input type="checkbox" name="days" value="Sat">SATURDAY<br>
+              </div>
+            </div>
+            <div class="u-form-group u-label-left" style="font-size: 20px; text-align:left;">
+              <label for="email-319a" class="u-label u-spacing-1 u-label-1">SWITCH</label>
+              <input type="button" id="taskState" name="taskState" value="ON" onclick="switchState()">
+            </div>
+        </div>
+        <div class="u-form-group u-form-submit">
+          <input type="hidden" id="url" name="url" value="/schedule/device">
+          <div class="u-align-center">
+            <button type="submit">SAVE</button>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+  </div>
+</section>
+
+{{!-- TIME SEETINGS --}}
+<script>
+  let currentDate = new Date()
+  let currentTime = [currentDate.getHours(), currentDate.getMinutes() + 1]//next minute
+  let hour = (currentTime[0] < 10) ? '0' + currentTime[0] : '' + currentTime[0] //HH
+  let minute = (currentTime[1] < 10) ? '0' + currentTime[1] : '' + currentTime[1]//MM
+
+  //set start time to current date value
+  let startTime = document.getElementById('startTime')
+  startTime.min = hour + ':' + minute//min date is the current date
+  startTime.value = startTime.min
+
+  //set end time to current date value :=> activity
+  let stopTime = document.getElementById('stopTime')
+  stopTime.min = hour + ':' + minute//min date is the current date
+</script>
+{{!-- SHOW HIDE REPEAT AND DURATION--}}
+<script>
+  //div.style.display = 'none' or 'block'
+  const repeatBox = document.getElementById("repeatBox")
+  const repeatDiv = document.getElementById('repeatDiv')
+  const durationBox = document.getElementById("durationBox")
+  const hours = document.getElementById('hours')
+  const minutes = document.getElementById('minutes')
+
+  function enableStopTime() {
+    if(stopTime.disabled){
+      stopTime.value = stopTime.min
+      stopTime.disabled = false
+    } else {
+      stopTime.value = '00:00'
+      stopTime.disabled = true
+    }
+  }
+  function showDays() {
+    if (repeatBox.checked) {
+      repeatBox.checked = true
+      repeatDiv.style.display = 'block'
+    } else {
+      repeatBox.checked = false
+      repeatDiv.style.display = 'none'
+    }
+  }
+  function enableDuration() {
+    if (durationBox.checked) {
+      hours.disabled = false
+      minutes.disabled = false
+    } else {
+      hours.disabled = true
+      minutes.disabled = true
+    }
+  }
+
+  enableStopTime()
+  showDays()
+  enableDuration()
+</script>
+{{!-- ON OFF for TASK STATE BUTTON--}}
+<script>
+  let taskState = document.getElementById('taskState')
+  function switchState() {
+    taskState.value = (taskState.value == 'ON') ? 'OFF' : 'ON'
+  }
+</script>
+<link rel="stylesheet" href="/vendor/deviceForm.css" media="screen">
+<script src="/vendor/post_time_schedule.js"></script>
